@@ -1,4 +1,5 @@
 require("coolcodersuper.lazy_init")
+require("coolcodersuper.vbnet")
 require("coolcodersuper.set")
 require("coolcodersuper.shell")
 require("coolcodersuper.lsp")

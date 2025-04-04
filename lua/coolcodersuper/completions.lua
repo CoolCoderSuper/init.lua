@@ -15,30 +15,30 @@ cmp.setup({
             select = true
         })
     }),
-    sources = cmp.config.sources({{
+    sources = cmp.config.sources({ {
         name = 'nvim_lsp'
     }, {
         name = 'vsnip'
     }
-    }, {{
+    }, { {
         name = 'buffer'
-    }})
+    } })
 })
 
-cmp.setup.cmdline({'/', '?'}, {
+cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = {{
+    sources = { {
         name = 'buffer'
-    }}
+    } }
 })
 
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({{
+    sources = cmp.config.sources({ {
         name = 'path'
-    }}, {{
+    } }, { {
         name = 'cmdline'
-    }}),
+    } }),
     matching = {
         disallow_symbol_nonprefix_matching = false
     }

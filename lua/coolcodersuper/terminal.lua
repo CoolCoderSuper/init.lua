@@ -63,7 +63,7 @@ local function switch_to_terminal(terminal_name)
             return
         end
 
-        vim.ui.select(
+        vim.ui.select(-- TODO: use telescope
             term_order,
             { prompt = 'Switch to Terminal' },
             function(choice)

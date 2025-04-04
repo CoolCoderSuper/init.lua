@@ -32,7 +32,7 @@ local function create_terminal(name)
             break
           end
         end
-        vim.notify("Terminal " .. deleted_name .. " closed.")
+        vim.notify('Terminal ' .. deleted_name .. ' closed.')
       end
     end,
   })
@@ -40,43 +40,14 @@ local function create_terminal(name)
   return buf
 end
 
-local function switch_to_terminal()
-  if #term_order == 0 then
-    vim.notify("No terminals created yet.")
-    return
-  end
-
-  vim.ui.select(
-    term_order,
-    { prompt = "Switch to Terminal" },
-    function(choice)
-      if choice then
-        if term_buffers[choice] and
-            vim.api.nvim_buf_is_valid(term_buffers[choice]) then
-          vim.cmd('buffer ' .. term_buffers[choice])
-        else
-          vim.notify("Terminal " .. choice .. " is no longer valid.")
-          term_buffers[choice] = nil
-          for i, v in ipairs(term_order) do
-            if v == choice then
-              table.remove(term_order, i)
-              break
-            end
-          end
-        end
-      end
-    end
-  )
-end
-
-local function goto_terminal(num)
-  if num > 0 and num <= #term_order then
-    local terminal_name = term_order[num]
+local function switch_to_terminal(terminal_name)
+  local buf
+  if terminal_name then
     if term_buffers[terminal_name] and
         vim.api.nvim_buf_is_valid(term_buffers[terminal_name]) then
-      vim.cmd('buffer ' .. term_buffers[terminal_name])
+      buf = term_buffers[terminal_name]
     else
-      vim.notify("Terminal " .. terminal_name .. " is no longer valid.")
+      vim.notify('Terminal ' .. terminal_name .. ' is no longer valid.')
       term_buffers[terminal_name] = nil
       for i, v in ipairs(term_order) do
         if v == terminal_name then
@@ -84,9 +55,63 @@ local function goto_terminal(num)
           break
         end
       end
+      return
     end
   else
-    vim.notify("No terminal at index " .. num .. " exists.")
+    if #term_order == 0 then
+      vim.notify('No terminals created yet.')
+      return
+    end
+
+    vim.ui.select(
+      term_order,
+      { prompt = 'Switch to Terminal' },
+      function(choice)
+        if choice then
+          switch_to_terminal(choice)
+        end
+      end
+    )
+    return
+  end
+
+  -- Check if the buffer is in the current tab
+  local windows = vim.api.nvim_tabpage_list_wins(0)
+  local found = false
+  for _, win in ipairs(windows) do
+    if vim.api.nvim_win_get_buf(win) == buf then
+      found = true
+      break
+    end
+  end
+
+  -- If not in the current tab, switch to the tab containing the buffer
+  if not found then
+    local tab_list = vim.api.nvim_list_tabpages()
+    for _, tab in ipairs(tab_list) do
+      local tab_windows = vim.api.nvim_tabpage_list_wins(tab)
+      for _, win in ipairs(tab_windows) do
+        if vim.api.nvim_win_get_buf(win) == buf then
+          vim.api.nvim_set_current_tabpage(tab)
+          found = true
+          break
+        end
+      end
+      if found then
+        break
+      end
+    end
+  end
+
+  vim.cmd('buffer ' .. buf)
+end
+
+local function goto_terminal(num)
+  if num > 0 and num <= #term_order then
+    local terminal_name = term_order[num]
+    switch_to_terminal(terminal_name)
+  else
+    vim.notify('No terminal at index ' .. num .. ' exists.')
   end
 end
 
@@ -104,35 +129,35 @@ local function close_terminal()
   if terminal_name then
     vim.cmd('bdelete!')
   else
-    vim.notify("Not in a managed terminal.")
+    vim.notify('Not in a managed terminal.')
   end
 end
 
 vim.keymap.set('n', '<leader>tp', function()
   switch_to_terminal()
-end, { desc = "Switch Terminal" })
+end, { desc = 'Switch Terminal' })
 
 vim.keymap.set('n', '<leader>tn', function()
-  vim.ui.input({ prompt = "Terminal Name: " }, function(name)
-    if name and name ~= "" then
+  vim.ui.input({ prompt = 'Terminal Name: ' }, function(name)
+    if name and name ~= '' then
       local buf = create_terminal(name)
       vim.cmd('buffer ' .. buf)
     end
   end)
-end, { desc = "New Terminal" })
+end, { desc = 'New Terminal' })
 
 for i = 1, 9 do
   vim.keymap.set('n', '<leader>t' .. i, function()
     goto_terminal(i)
-  end, { desc = "Terminal " .. i })
+  end, { desc = 'Terminal ' .. i })
 end
 
 vim.keymap.set('n', '<leader>tc', function()
   close_terminal()
-end, { desc = "Close Terminal" })
+end, { desc = 'Close Terminal' })
 
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 return {
-  create_terminal = create_terminal
+  create_terminal = create_terminal,
 }

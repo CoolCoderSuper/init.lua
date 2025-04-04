@@ -23,5 +23,10 @@ return {
         "folke/trouble.nvim",
         opts = {},
         cmd = "Trouble",
+    },
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" }
     }
 }

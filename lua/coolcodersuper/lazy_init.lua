@@ -7,5 +7,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    spec = "coolcodersuper.lazy"
+    spec = "coolcodersuper.lazy",
+    change_detection = { notify = false }
 })

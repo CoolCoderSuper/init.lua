@@ -1,6 +1,6 @@
 local telescope = require('telescope')
 local open_with_trouble = require("trouble.sources.telescope").open
--- TODO: replace ui.select with telescope, and quickfix list?
+-- TODO: quickfix list?
 telescope.setup({
     defaults = {
         mappings = {
@@ -10,6 +10,7 @@ telescope.setup({
     },
 })
 
+telescope.load_extension("ui-select")
 telescope.load_extension "file_browser"
 vim.keymap.set('n', '<leader>fe', telescope.extensions.file_browser.file_browser)
 

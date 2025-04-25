@@ -1,5 +1,6 @@
 vim.cmd.colorscheme("gruvbox")
 vim.wo.relativenumber = true
+vim.wo.number = true
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false

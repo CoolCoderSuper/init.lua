@@ -13,13 +13,6 @@ return {
         dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
     },
     {
-        "pianocomposer321/officer.nvim",
-        dependencies = "stevearc/overseer.nvim",
-        config = function()
-            require("officer").setup {}
-        end,
-    },
-    {
         "folke/trouble.nvim",
         opts = {},
         cmd = "Trouble",

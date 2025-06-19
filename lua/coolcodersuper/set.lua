@@ -14,7 +14,7 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
 local builtin = require('telescope.builtin')
-local opts = { }
+local opts = {}
 
 vim.keymap.set('n', '<leader>yy', '"ayy', opts)
 vim.keymap.set('n', '<leader>yp', '"ap', opts)
@@ -44,3 +44,15 @@ vim.keymap.set('n', '<leader>fds', builtin.lsp_document_symbols)
 
 local neogit = require('neogit')
 vim.keymap.set('n', '<leader>sc', neogit.open)
+
+vim.diagnostic.config({
+    virtual_text = {
+        prefix = '●',
+        spacing = 2,
+        source = "if_many",
+    },
+    signs = true,
+    underline = true,
+    update_in_insert = true,
+    severity_sort = true,
+})

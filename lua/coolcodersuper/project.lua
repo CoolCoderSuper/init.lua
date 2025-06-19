@@ -1,5 +1,5 @@
 local make    = {}
--- TODO: we should have some kind of error list
+
 make.bufnr    = nil
 make.job_id   = nil
 local link_ns = vim.api.nvim_create_namespace("msbuild_links")
@@ -185,11 +185,54 @@ function make.run(cmd)
     })
 end
 
+function make.trouble()
+  if not make.bufnr or not vim.api.nvim_buf_is_valid(make.bufnr) then
+    vim.notify("No build output buffer", vim.log.levels.WARN)
+    return
+  end
+
+  local items = {}
+  local lines = vim.api.nvim_buf_get_lines(make.bufnr, 0, -1, false)
+  for _, line in ipairs(lines) do
+    local path, r, c = line:match("([^%(]+)%((%d+),(%d+)%)")
+    if path then
+      local filename = vim.fn.fnamemodify(path, ":p")
+      local text     = line
+      local kind     = "I"
+      if line:match("[Ee]rror")   then kind = "E"
+      elseif line:match("[Ww]arning") then kind = "W"
+      end
+      table.insert(items, {
+        filename = filename,
+        lnum     = tonumber(r),
+        col      = tonumber(c),
+        text     = text,
+        type     = kind,
+      })
+    end
+  end
+
+  if #items == 0 then
+    vim.notify("No errors or warnings found", vim.log.levels.INFO)
+    return
+  end
+
+  -- replace quickfix list
+  vim.fn.setqflist({}, "r", {
+    title = "Make Output",
+    items = items,
+  })
+  require("trouble").open("quickfix")
+end
+
 vim.keymap.set("n", "<leader>m", make.toggle, {
     desc = "Toggle Make Output buffer",
 })
 vim.keymap.set("n", "<leader>c", make.cancel, {
     desc   = "Cancel build process",
+})
+vim.keymap.set("n", "<leader>t", make.trouble, {
+  desc = "Show build errors/warnings in Trouble",
 })
 
 local root = vim.fn.getcwd()

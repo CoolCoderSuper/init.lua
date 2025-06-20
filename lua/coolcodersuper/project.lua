@@ -46,9 +46,11 @@ function make.highlight()
     for i, line in ipairs(lines) do
         -- match e.g. C:\path\to\File.cpp(123,45)
         for s, e in line:gmatch("()[-%w\\:/. ]+%(%d+,%d+%)()") do
-            vim.api.nvim_buf_add_highlight(
-                make.bufnr, link_ns, "Underlined", i - 1, s - 1, e - 1
-            )
+            vim.api.nvim_buf_add_highlight(make.bufnr, link_ns, "Underlined", i - 1, s - 1, e - 1)
+        end
+        -- match e.g. C:\CodingCool\GuentherTech\Projects\BWMERP\BWMERP\ApplicationEvents.vb:line 25
+        for s, e in line:gmatch("in%s+()[-%w\\\\:/. ]-:line%s+%d+()") do
+            vim.api.nvim_buf_add_highlight(make.bufnr, link_ns, "Underlined", i - 1, s - 1, e - 1)
         end
     end
 end
@@ -61,6 +63,10 @@ function make.open_error_in_line(lnum)
         make.bufnr, lnum - 1, lnum, false
     )[1] or ""
     local path, row, col = line:match("([^%(]+)%((%d+),(%d+)%)")
+    if not path then
+        path, row = line:match("in%s+(.+):line%s*(%d+)")
+        col = 1
+    end
     if not path then
         vim.notify("No build-error link on that line",
             vim.log.levels.WARN)
@@ -186,53 +192,55 @@ function make.run(cmd)
 end
 
 function make.trouble()
-  if not make.bufnr or not vim.api.nvim_buf_is_valid(make.bufnr) then
-    vim.notify("No build output buffer", vim.log.levels.WARN)
-    return
-  end
-
-  local items = {}
-  local lines = vim.api.nvim_buf_get_lines(make.bufnr, 0, -1, false)
-  for _, line in ipairs(lines) do
-    local path, r, c = line:match("([^%(]+)%((%d+),(%d+)%)")
-    if path then
-      local filename = vim.fn.fnamemodify(path, ":p")
-      local text     = line
-      local kind     = "I"
-      if line:match("[Ee]rror")   then kind = "E"
-      elseif line:match("[Ww]arning") then kind = "W"
-      end
-      table.insert(items, {
-        filename = filename,
-        lnum     = tonumber(r),
-        col      = tonumber(c),
-        text     = text,
-        type     = kind,
-      })
+    if not make.bufnr or not vim.api.nvim_buf_is_valid(make.bufnr) then
+        vim.notify("No build output buffer", vim.log.levels.WARN)
+        return
     end
-  end
 
-  if #items == 0 then
-    vim.notify("No errors or warnings found", vim.log.levels.INFO)
-    return
-  end
+    local items = {}
+    local lines = vim.api.nvim_buf_get_lines(make.bufnr, 0, -1, false)
+    for _, line in ipairs(lines) do
+        local path, r, c = line:match("([^%(]+)%((%d+),(%d+)%)")
+        if path then
+            local filename = vim.fn.fnamemodify(path, ":p")
+            local text     = line
+            local kind     = "I"
+            if line:match("[Ee]rror") then
+                kind = "E"
+            elseif line:match("[Ww]arning") then
+                kind = "W"
+            end
+            table.insert(items, {
+                filename = filename,
+                lnum     = tonumber(r),
+                col      = tonumber(c),
+                text     = text,
+                type     = kind,
+            })
+        end
+    end
 
-  -- replace quickfix list
-  vim.fn.setqflist({}, "r", {
-    title = "Make Output",
-    items = items,
-  })
-  require("trouble").open("quickfix")
+    if #items == 0 then
+        vim.notify("No errors or warnings found", vim.log.levels.INFO)
+        return
+    end
+
+    -- replace quickfix list
+    vim.fn.setqflist({}, "r", {
+        title = "Make Output",
+        items = items,
+    })
+    require("trouble").open("quickfix")
 end
 
 vim.keymap.set("n", "<leader>m", make.toggle, {
     desc = "Toggle Make Output buffer",
 })
 vim.keymap.set("n", "<leader>c", make.cancel, {
-    desc   = "Cancel build process",
+    desc = "Cancel build process",
 })
 vim.keymap.set("n", "<leader>t", make.trouble, {
-  desc = "Show build errors/warnings in Trouble",
+    desc = "Show build errors/warnings in Trouble",
 })
 
 local root = vim.fn.getcwd()

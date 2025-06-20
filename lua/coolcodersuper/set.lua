@@ -26,7 +26,10 @@ vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, opts)
 vim.keymap.set("n", "<leader>gr", builtin.lsp_references, opts)
 vim.keymap.set("n", "<leader>gi", builtin.lsp_incoming_calls, opts)
 vim.keymap.set("n", "<leader>go", builtin.lsp_outgoing_calls, opts)
-vim.keymap.set("n", "<leader>ld", builtin.diagnostics, opts)
+vim.keymap.set("n", "<leader>ld", function()
+    vim.lsp.buf.workspace_diagnostics()--TODO: wait for this to finish loading?
+    builtin.diagnostics()
+end, opts)
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 vim.keymap.set("n", "<leader>l", vim.lsp.buf.format, opts)
 
@@ -56,3 +59,5 @@ vim.diagnostic.config({
     update_in_insert = true,
     severity_sort = true,
 })
+
+require("vbnet").setup()

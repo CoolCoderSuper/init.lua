@@ -3,7 +3,7 @@ return {
     'nvim-tree/nvim-web-devicons', 'nvim-lualine/lualine.nvim', 'nvim-telescope/telescope-ui-select.nvim',
     'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'adelarsq/neofsharp.vim',
     'hrsh7th/nvim-cmp', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path', 'hrsh7th/cmp-cmdline',
-    'hrsh7th/cmp-vsnip', 'hrsh7th/vim-vsnip',
+    'hrsh7th/cmp-vsnip', 'hrsh7th/vim-vsnip', 'CoolCoderSuper/vbnet.nvim',
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' }

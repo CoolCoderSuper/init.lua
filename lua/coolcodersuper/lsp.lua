@@ -6,16 +6,15 @@ require("copilot").setup {
     }
 }
 
-local lspconfig = require('lspconfig')
-
-lspconfig.rust_analyzer.setup {}
-lspconfig.fsautocomplete.setup {}
-lspconfig.ts_ls.setup {}
-lspconfig.lua_ls.setup {}
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('fsautocomplete')
+vim.lsp.enable('lua_ls')
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('jsonls')
 
 vim.lsp.config['vb_ls'] = {
     cmd = { [[C:\CodingCool\Code\Projects\visualbasic-language-server\src\VisualBasicLanguageServer\bin\Debug\net9.0\VisualBasicLanguageServer.exe]] },
-    root_markers = { '*.sln', '.slnx', '*.vbproj' },
+    root_markers = { '*.sln', '*.slnx', '*.vbproj' },
     filetypes = { 'vbnet' },
     init_options = {
         AutomaticWorkspaceInit = true,

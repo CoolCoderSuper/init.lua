@@ -13,6 +13,9 @@ cmp.setup({
         ['<C-e>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({
             select = true
+        }),
+        ['<M-a>'] = cmp.mapping.confirm({
+            select = true
         })
     }),
     sources = cmp.config.sources({ {

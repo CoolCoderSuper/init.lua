@@ -137,6 +137,8 @@ end
 function make.run(cmd)
     if make.job_id then pcall(vim.fn.jobstop, make.job_id) end
 
+    vim.cmd("wa")
+
     local is_win = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
     local argv
     if is_win then

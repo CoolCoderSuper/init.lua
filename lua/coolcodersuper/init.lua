@@ -1,6 +1,5 @@
 require("coolcodersuper.lazy_init")
 require("coolcodersuper.set")
-require("coolcodersuper.shell")
 require("coolcodersuper.lsp")
 require("coolcodersuper.completions")
 require("coolcodersuper.tc")

@@ -1,10 +1,5 @@
 require("mason").setup {}
 require("mason-lspconfig").setup {}
-require("copilot").setup {
-    suggestion = {
-        auto_trigger = true,
-    }
-}
 
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('fsautocomplete')

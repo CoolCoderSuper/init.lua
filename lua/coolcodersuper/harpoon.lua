@@ -17,6 +17,7 @@ for i = 1, 9 do
     vim.keymap.set('n', '<leader>h' .. i, function() harpoon:list():select(i) end)
     vim.keymap.set('n', '<leader>hv' .. i, function()
         vim.cmd('vsplit')
+        vim.cmd('wincmd w')
         harpoon:list():select(i)
     end)
 end

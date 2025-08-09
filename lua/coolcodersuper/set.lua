@@ -102,3 +102,6 @@ require("supermaven-nvim").setup({
         accept_suggestion = "<A-l>",
     },
 })
+
+require('terminal').setup_default()
+require('make-runner').setup_default()

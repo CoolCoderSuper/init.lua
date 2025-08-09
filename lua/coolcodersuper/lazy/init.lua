@@ -1,6 +1,6 @@
 return {
     'morhetz/gruvbox', 'maxmx03/fluoromachine.nvim', 'folke/tokyonight.nvim',
-    'NeogitOrg/neogit', 'sindrets/diffview.nvim', 'mhinz/vim-signify',
+    'NeogitOrg/neogit', 'sindrets/diffview.nvim', 'mhinz/vim-signify', 'CoolCoderSuper/terminal.nvim', 'CoolCoderSuper/make-runner.nvim',
     'nvim-tree/nvim-web-devicons', 'nvim-lualine/lualine.nvim', 'nvim-telescope/telescope-ui-select.nvim',
     'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'adelarsq/neofsharp.vim',
     'hrsh7th/nvim-cmp', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path', 'hrsh7th/cmp-cmdline',

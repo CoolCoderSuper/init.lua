@@ -105,3 +105,21 @@ require("supermaven-nvim").setup({
 
 require('terminal').setup_default()
 require('make-runner').setup_default()
+
+vim.keymap.set('n', '<leader>tt', function() vim.cmd("TodoTelescope") end)
+
+vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>")
+
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+
+-- require 'nvim-treesitter.install'.compilers = { "zig", "clang" }
+-- local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+-- parser_config.vbnet = {
+--   install_info = {
+--     url = "https://github.com/CoolCoderSuper/tree-sitter-vb-basic", -- local path or git repo
+--     files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+--     -- optional entries:
+--     generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+--     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+--   },
+-- }

@@ -34,7 +34,7 @@ vim.keymap.set("n", "<leader>ld", function()
     builtin.diagnostics()
 end, opts)
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-vim.keymap.set("n", "<leader>l", vim.lsp.buf.format, opts)
+vim.keymap.set({ "v", "n" }, "<leader>l", vim.lsp.buf.format, opts)
 
 vim.keymap.set('n', '<leader>ff', builtin.find_files, opts)
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, opts)

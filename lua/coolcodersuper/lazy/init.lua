@@ -6,8 +6,8 @@ return {
     'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'adelarsq/neofsharp.vim',
     'hrsh7th/nvim-cmp', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path', 'hrsh7th/cmp-cmdline',
     'hrsh7th/cmp-vsnip', 'hrsh7th/vim-vsnip', 'CoolCoderSuper/vbnet.nvim', 'MonsieurTib/neonuget', 'stevearc/oil.nvim',
-    'aznhe21/actions-preview.nvim', 'kosayoda/nvim-lightbulb', 'lewis6991/satellite.nvim', 'mbbill/undotree',
-    'supermaven-inc/supermaven-nvim', 'Eandrju/cellular-automaton.nvim', --'nvim-treesitter/nvim-treesitter',
+    'aznhe21/actions-preview.nvim', 'kosayoda/nvim-lightbulb', 'lewis6991/satellite.nvim',
+    'supermaven-inc/supermaven-nvim',
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' }
@@ -38,11 +38,6 @@ return {
         opts = {
             position = "bottom",
         }
-    },
-    {
-        "yutkat/confirm-quit.nvim",
-        event = "CmdlineEnter",
-        opts = {},
     },
     {
         "folke/todo-comments.nvim",

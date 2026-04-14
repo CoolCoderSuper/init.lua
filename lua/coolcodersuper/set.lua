@@ -107,7 +107,3 @@ require('terminal').setup_default()
 require('make-runner').setup_default()
 
 vim.keymap.set('n', '<leader>tt', function() vim.cmd("TodoTelescope") end)
-
-vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>")
-
-vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)

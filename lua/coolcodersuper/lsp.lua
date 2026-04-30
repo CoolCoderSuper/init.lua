@@ -4,7 +4,6 @@ require("mason-lspconfig").setup {}
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('fsautocomplete')
 vim.lsp.enable('lua_ls')
-vim.lsp.enable('ts_ls')
 vim.lsp.enable('jsonls')
 
 vim.lsp.config['vb_ls'] = {

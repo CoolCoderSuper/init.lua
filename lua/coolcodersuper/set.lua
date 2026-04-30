@@ -107,3 +107,5 @@ require('terminal').setup_default()
 require('make-runner').setup_default()
 
 vim.keymap.set('n', '<leader>tt', function() vim.cmd("TodoTelescope") end)
+
+require('vim._core.ui2').enable()

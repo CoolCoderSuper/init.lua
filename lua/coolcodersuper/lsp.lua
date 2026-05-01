@@ -1,86 +1,63 @@
 require("mason").setup {}
 require("mason-lspconfig").setup {}
 
-vim.lsp.enable('rust_analyzer')
-vim.lsp.enable('fsautocomplete')
-vim.lsp.enable('lua_ls')
-vim.lsp.enable('jsonls')
-
 vim.lsp.config['vb_ls'] = {
-    cmd = { [[C:\CodingCool\Code\Projects\visualbasic-language-server\src\VisualBasicLanguageServer\bin\Debug\net9.0\VisualBasicLanguageServer.exe]] },
-    root_markers = { '*.sln', '*.slnx', '*.vbproj' },
-    filetypes = { 'vbnet' },
-    init_options = {
-        AutomaticWorkspaceInit = true,
+    cmd = {
+        'vb-ls',
+        '--logLevel',
+        'Information',
+        '--extensionLogDirectory',
+        vim.fs.joinpath(vim.uv.os_tmpdir(), 'roslyn_ls', 'logs'),
+        '--stdio',
+        '--autoLoadProjects',
+    },
+    filetypes = { 'cs', 'vbnet' },
+    root_dir = function(bufnr, cb)
+        local root_dir = vim.fs.root(bufnr, function(fname, _)
+            return fname:match('%.sln[x]?$') ~= nil
+        end)
+
+        if not root_dir then
+            root_dir = vim.fs.root(bufnr, function(fname, _)
+                return fname:match('%.csproj$') ~= nil or fname:match('%.vbproj$') ~= nil
+            end)
+        end
+
+        if root_dir then
+            cb(root_dir)
+        end
+    end,
+    settings = {
+        ['csharp|background_analysis'] = {
+            dotnet_analyzer_diagnostics_scope = 'fullSolution',
+            dotnet_compiler_diagnostics_scope = 'fullSolution',
+        },
+        ['csharp|inlay_hints'] = {
+            csharp_enable_inlay_hints_for_implicit_object_creation = true,
+            csharp_enable_inlay_hints_for_implicit_variable_types = true,
+            csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+            csharp_enable_inlay_hints_for_types = true,
+            dotnet_enable_inlay_hints_for_indexer_parameters = true,
+            dotnet_enable_inlay_hints_for_literal_parameters = true,
+            dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+            dotnet_enable_inlay_hints_for_other_parameters = true,
+            dotnet_enable_inlay_hints_for_parameters = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+        },
+        ['csharp|symbol_search'] = {
+            dotnet_search_reference_assemblies = true,
+        },
+        ['csharp|completion'] = {
+            dotnet_show_name_completion_suggestions = true,
+            dotnet_show_completion_items_from_unimported_namespaces = true,
+            dotnet_provide_regex_completions = true,
+        },
+        ['csharp|code_lens'] = {
+            dotnet_enable_references_code_lens = true,
+        },
     },
 }
 
 vim.lsp.enable('vb_ls')
-
-vim.lsp.config['omnisharp'] = {
-  cmd = {
-    [[C:\CodingCool\Code\Projects\omnisharp-roslyn\bin\Debug\OmniSharp.Stdio.Driver\net6.0\OmniSharp.exe]],
-    '-z', -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
-    '--hostPID',
-    tostring(vim.fn.getpid()),
-    'DotNet:enablePackageRestore=false',
-    '--encoding',
-    'utf-8',
-    '--languageserver',
-  },
-  filetypes = { 'cs' },
-  root_markers = { '.sln', '.slnx', '.csproj', 'omnisharp.json', 'function.json' },
-  init_options = {},
-  capabilities = {
-    workspace = {
-      workspaceFolders = false, -- https://github.com/OmniSharp/omnisharp-roslyn/issues/909
-    },
-  },
-  settings = {
-    FormattingOptions = {
-      -- Enables support for reading code style, naming convention and analyzer
-      -- settings from .editorconfig.
-      EnableEditorConfigSupport = true,
-      -- Specifies whether 'using' directives should be grouped and sorted during
-      -- document formatting.
-      OrganizeImports = nil,
-    },
-    MsBuild = {
-      -- If true, MSBuild project system will only load projects for files that
-      -- were opened in the editor. This setting is useful for big C# codebases
-      -- and allows for faster initialization of code navigation features only
-      -- for projects that are relevant to code that is being edited. With this
-      -- setting enabled OmniSharp may load fewer projects and may thus display
-      -- incomplete reference lists for symbols.
-      LoadProjectsOnDemand = nil,
-    },
-    RoslynExtensionsOptions = {
-      -- Enables support for roslyn analyzers, code fixes and rulesets.
-      EnableAnalyzersSupport = nil,
-      -- Enables support for showing unimported types and unimported extension
-      -- methods in completion lists. When committed, the appropriate using
-      -- directive will be added at the top of the current file. This option can
-      -- have a negative impact on initial completion responsiveness,
-      -- particularly for the first few completion sessions after opening a
-      -- solution.
-      EnableImportCompletion = nil,
-      -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
-      -- true
-      AnalyzeOpenDocumentsOnly = nil,
-      -- Enables the possibility to see the code in external nuget dependencies
-      EnableDecompilationSupport = nil,
-    },
-    RenameOptions = {
-      RenameInComments = nil,
-      RenameOverloads = nil,
-      RenameInStrings = nil,
-    },
-    Sdk = {
-      -- Specifies whether to include preview versions of the .NET SDK when
-      -- determining which version to use for project loading.
-      IncludePrereleases = true,
-    },
-  },
-}
-
-vim.lsp.enable('omnisharp')
